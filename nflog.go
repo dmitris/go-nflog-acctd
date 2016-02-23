@@ -55,6 +55,16 @@ static int _processPacket(struct nflog_g_handle *gh, struct nfgenmsg *nfmsg, str
 	return 0;
  }
 
+// https://groups.google.com/forum/#!topic/golang-nuts/rc0iNo6gRXg
+static struct nflog_g_handle *go_nflog_bind_group(struct nflog_handle
+*h, int num) {
+    return nflog_bind_group(h, num);
+}
+
+static struct nflog_g_handle *go_nflog_bind_group(struct nflog_handle
+*h, int num) {
+    return nflog_bind_group(h, num);
+}
 // Register the callback - can't be done from Go
 //
 // We have to register a C function _processPacket
@@ -276,7 +286,7 @@ func (nflog *NfLog) makeGroup(group, size int) {
 	if *Verbose {
 		log.Printf("Binding this socket to group %d", group)
 	}
-	gh, err := C.nflog_bind_group(nflog.h, (C.uint16_t)(group))
+	gh, err := go_nflog_bind_group(nflog.h, (C.int)(group))
 	if gh == nil || err != nil {
 		log.Fatalf("nflog_bind_group failed: %s", nflogError(err))
 	}
